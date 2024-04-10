@@ -1,10 +1,35 @@
-/////////////////////////////////          
-// LegoLookAt.cpp
-//
-// LookAt a Lego scene
-//
-// Marjory Baruch
-/////////////////////////////////
+/******************************************
+*
+* Official Name:  Andrew Markarian
+*
+* E-mail:  atmarkar@syr.edu
+*
+* Assignment:  Assignment 3
+*
+* Environment/Compiler:  Visual Studio Community 2019 (or whatever you use)
+*
+* Date submitted:  March 19, 2024    (or when you submitted it)
+*
+* References:  NONE
+*
+* Interactions:
+* 
+* Left click any flower to make bee go to that flower and make it larger
+* A for above view
+* W for West view
+* E for East view
+* N for North view (default)
+* S for South View
+*
+* Up / Down arrow key to make clouds go faster / slower
+* Left / Right arrow key to make Bee go faster / slower
+* 
+* 1 to make purple flower larger
+* 2 to make blue flower larger
+* 3 to make red flower larger
+* 
+* Press esc to quit
+*******************************************/
 
 #include <iostream>
 
@@ -29,12 +54,23 @@ bool updateState = false;
 int height, width;
 bool selecting = false;
 int xClick, yClick;  //coordinates of mouseclick
+int animationPeriod = 100;
+int beeAnimationPeriod = 100;
+
+//purple flower
+bool pIsPollen = false;
+
+//red flower
+bool rIsPollen = false;
+
+//blue flower
+bool bIsPollen = false;
 
 // for bee posistion
 float startX = 6, startY = 9, startZ = -9; 
 static float endX, endY, endZ;
 static float Vx, Vy, Vz;
-static float Mx = 0, My = 0, Mz = 0;
+static float Mx = 0, My = 0, Mz = 0, Mr = 0;
 static int t = 0;
 float beeRotationAngle = 0;
 
@@ -211,6 +247,8 @@ void drawFlowers() {
     glScalef(2.0, 1.0, 2.0);
 
     glPushMatrix();
+    if (PURPLEFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glTranslated(0.0, 0.0, -1.0);
     glutSolidSphere(1, 10, 10);
@@ -219,6 +257,8 @@ void drawFlowers() {
     glPushMatrix();
     glRotated(90, 0, 1, 0);
     glTranslated(0.0, 0.0, -1.0);
+    if (PURPLEFLOWER) glScalef(1.2, 1.0, 1.6);
+    else 
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
@@ -226,12 +266,16 @@ void drawFlowers() {
     glPushMatrix();
     glRotated(90, 0, 1, 0);
     glTranslated(0.0, 0.0, 1.0);
+    if (PURPLEFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
 
     glPushMatrix();
     glTranslated(0.0, 0.0, 1.0);
+    if (PURPLEFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
@@ -275,6 +319,8 @@ void drawFlowers() {
     glScalef(2.0, 1.0, 2.0);
 
     glPushMatrix();
+    if (BLUEFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glTranslated(0.0, 0.0, -1.0);
     glutSolidSphere(1, 10, 10);
@@ -283,6 +329,8 @@ void drawFlowers() {
     glPushMatrix();
     glRotated(90, 0, 1, 0);
     glTranslated(0.0, 0.0, -1.0);
+    if (BLUEFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
@@ -290,12 +338,16 @@ void drawFlowers() {
     glPushMatrix();
     glRotated(90, 0, 1, 0);
     glTranslated(0.0, 0.0, 1.0);
+    if (BLUEFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
 
     glPushMatrix();
     glTranslated(0.0, 0.0, 1.0);
+    if (BLUEFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
@@ -341,6 +393,8 @@ void drawFlowers() {
     glScalef(2.0, 1.0, 2.0);
 
     glPushMatrix();
+    if (REDFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glTranslated(0.0, 0.0, -1.0);
     glutSolidSphere(1, 10, 10);
@@ -349,6 +403,8 @@ void drawFlowers() {
     glPushMatrix();
     glRotated(90, 0, 1, 0);
     glTranslated(0.0, 0.0, -1.0);
+    if (REDFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
@@ -356,12 +412,16 @@ void drawFlowers() {
     glPushMatrix();
     glRotated(90, 0, 1, 0);
     glTranslated(0.0, 0.0, 1.0);
+    if (REDFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
 
     glPushMatrix();
     glTranslated(0.0, 0.0, 1.0);
+    if (REDFLOWER) glScalef(1.2, 1.0, 1.6);
+    else
     glScalef(.8, 1.0, 1.2);
     glutSolidSphere(1, 10, 10);
     glPopMatrix();
@@ -490,7 +550,7 @@ void drawBee(int shadow) {
     glTranslated(Mx, My, Mz);
     glTranslated(startX, startY, startZ);
 
-    glRotated(beeRotationAngle+90, 0, 1, 0);
+    glRotated(Mr+90, 0, 1, 0);
 
     //body
     glPushMatrix();
@@ -701,12 +761,12 @@ void increaseVector() {
 
     //rotate bee
 
-    if (t < 20 && updateState) {
+    if (t < 20 ) {
         // Rotate the bee gradually towards the next flower
         if (beeRotationAngle > 0)
-            beeRotationAngle -= 1.0; 
+            Mr = t / 20.0 * beeRotationAngle;
         else if (beeRotationAngle < 0)
-            beeRotationAngle += 1.0; 
+            Mr = t / 20.0 * beeRotationAngle;
 
         // Ensure beeRotationAngle stays within [-180, 180] degrees
         if (beeRotationAngle > 180)
@@ -758,13 +818,13 @@ void increaseVector() {
 
 void animateBee(int someValue)
 {
-    increaseVector();
-    glutTimerFunc(100, animateBee, 1);
+        increaseVector();
+        glutTimerFunc(beeAnimationPeriod, animateBee, 1);
 }
 
 void animateClouds(int someValue) {
     increaseCloudVector();
-    glutTimerFunc(100, animateClouds, 0.1);
+    glutTimerFunc(animationPeriod, animateClouds, 0.1);
 }
 
 // Drawing routine.
@@ -853,6 +913,15 @@ void mouseControl(int button, int state, int x, int y)
     }
 }
 
+void specialKeyInput(int key, int x, int y)
+{
+    if (key == GLUT_KEY_DOWN) animationPeriod += 5;
+    if (key == GLUT_KEY_UP) if (animationPeriod > 5) animationPeriod -= 5;
+    if (key == GLUT_KEY_RIGHT) beeAnimationPeriod += 5;
+    if (key == GLUT_KEY_LEFT) if (beeAnimationPeriod > 5) beeAnimationPeriod -= 5;
+    glutPostRedisplay();
+}
+
 // Keyboard input processing routine.
 void keyInput(unsigned char key, int x, int y)
 {
@@ -881,9 +950,14 @@ void keyInput(unsigned char key, int x, int y)
         direction = 4;
         glutPostRedisplay();
         break;
-    case ' ':
-        increaseCloudVector();
-        glutPostRedisplay();
+    case '1':
+        PURPLEFLOWER = !PURPLEFLOWER;
+        break;
+    case '2':
+        BLUEFLOWER = !BLUEFLOWER;
+        break;
+    case '3':
+        REDFLOWER = !REDFLOWER;
         break;
 
     default:
@@ -901,6 +975,12 @@ void printInteraction(void)
     cout << "Press E to look from the East" << endl;
     cout << "Press W to look from the West" << endl;
     cout << "Press A to look from Above" << endl;
+
+    cout << "Press Up / Down arrow key to make clouds go faster / slower" << endl;
+    cout << "Press Left / Right arrow key to make Bee go faster / slower" << endl;
+    cout << "Press 1 to make purple flower larger" << endl;
+    cout << "Press 2 to make blue flower larger" << endl;
+    cout << "Press 3 to make red flower larger" << endl;
 }
 
 // Main routine.
@@ -916,8 +996,9 @@ int main(int argc, char** argv)
     glutReshapeFunc(resize);
     glutKeyboardFunc(keyInput);
     glutMouseFunc(mouseControl);
-    glutTimerFunc(5, animateBee, 1);
-    glutTimerFunc(5, animateClouds, 1);
+    glutSpecialFunc(specialKeyInput);
+    glutTimerFunc(100, animateBee, 1);
+    glutTimerFunc(100, animateClouds, 1);
     printInteraction();
     glutMainLoop();
 
